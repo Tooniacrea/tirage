@@ -5,176 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tirage des rôles du jeu TikTok</title>
 <style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    margin: 0;
-    background: linear-gradient(to right, #f0f0f0, #d0e7ff);
-}
-
-h1 {
-    color: #333;
-    text-align: center;
-    font-size: 1.4rem;
-    margin-bottom: 10px;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-    width: 95%;
-    max-width: 450px;
-}
-
-.player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 12px;
-    padding: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    width: 100%;
-    transition: box-shadow 0.5s ease;
-}
-
-.player.active {
-    box-shadow: 0 0 20px 5px gold;
-}
-
-.player-name {
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 1rem;
-}
-
-.cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    width: 100%;
-}
-
-.card {
-    width: 45vw;
-    max-width: 220px;
-    height: 45vw;
-    max-height: 220px;
-    perspective: 1200px;
-    transform: translateY(50px);
-    opacity: 0;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    border: 2px solid #fff;
-    border-radius: 12px;  
-}
-
-.card.show {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s cubic-bezier(0.68,-0.55,0.265,1.55);
-    transform-style: preserve-3d;
-}
-
-.card.flipped .card-inner {
-    transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-    padding: 0px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    text-align: justify;
-    overflow: hidden;
-}
-
-.text-container {
-    max-width: 90%;
-    word-wrap: break-word;
-    color: black;
-    font-size: 0.9rem;
-}
-
-.card-back {
-    transform: rotateY(180deg);
-}
-
-@keyframes shake {
-    0% { transform: rotate(0deg); }
-    20% { transform: rotate(5deg); }
-    40% { transform: rotate(-5deg); }
-    60% { transform: rotate(3deg); }
-    80% { transform: rotate(-3deg); }
-    100% { transform: rotate(0deg); }
-}
-
-.shake {
-    animation: shake 0.5s;
-}
-
-button {
-    margin-top: 15px;
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    width: 90%;
-    max-width: 300px;
-}
+body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; background: linear-gradient(to right, #f0f0f0, #d0e7ff);}
+h1 { text-align: center; margin-bottom: 10px; }
+button { margin-bottom: 15px; padding: 12px 25px; font-size: 1.1rem; border-radius: 8px; border: none; cursor: pointer; background-color: #4CAF50; color: white; width: 90%; max-width: 300px; }
+.cards-container { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 95%; max-width: 450px; }
+.card { width: 80vw; max-width: 300px; height: 80vw; max-height: 300px; perspective: 1200px; opacity: 0; transform: translateY(30px); transition: transform 0.5s ease, opacity 0.5s ease; border-radius: 12px; cursor: pointer;}
+.card.show { transform: translateY(0); opacity: 1; }
+.card-inner { position: relative; width: 100%; height: 100%; text-align: center; transform-style: preserve-3d; transition: transform 0.8s ease; }
+.card.flipped .card-inner { transform: rotateY(180deg); }
+.card-front, .card-back { position: absolute; width: 100%; height: 100%; border-radius: 12px; backface-visibility: hidden; display: flex; flex-direction: column; font-weight: bold; font-size: 14px; overflow: hidden; padding: 0; }
+.card-front { justify-content: center; align-items: center; font-size: 1.4rem; color: white; }
+.card-back { transform: rotateY(180deg); justify-content: flex-start; align-items: center; padding: 5px; }
+.card-back .player-name { font-size: 1rem; font-weight: bold; margin: 8px 0; color: black; }
+.card-back .text-container { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 1rem; padding: 0 10px; color: black; }
+.card-front .click-text { font-size: 0.8rem; margin-top: 5px; color: #fff; }
+/* Animation suspense */
+@keyframes suspense { 0% { transform: rotate(0deg) scale(1); } 10% { transform: rotate(15deg) scale(1.05); } 20% { transform: rotate(-15deg) scale(1.05); } 30% { transform: rotate(10deg) scale(1.05); } 40% { transform: rotate(-10deg) scale(1.05); } 50% { transform: rotate(5deg) scale(1.05); } 60% { transform: rotate(-5deg) scale(1.05); } 70% { transform: rotate(3deg) scale(1.05); } 80% { transform: rotate(-3deg) scale(1.05); } 90% { transform: rotate(2deg) scale(1.05); } 100% { transform: rotate(0deg) scale(1); } }
+.animate-suspense { animation: suspense 3s ease-in-out; }
+table { border-collapse: collapse; margin-top: 20px; width: 95%; max-width: 450px; }
+th, td { border: 1px solid #444; padding: 8px; text-align: left; }
+th { background-color: #4CAF50; color: white; }
 </style>
 </head>
 <body>
 
 <h1>Tirage des rôles du jeu TikTok 🎴</h1>
-
-<div class="container" id="playersContainer"></div>
-
-<button id="drawCards">Attribuer les cartes</button>
+<button id="nextCard">Suivant</button>
+<div class="cards-container" id="cardsContainer"></div>
+<div id="recapTable"></div>
 
 <script>
-// Liste des personnes
-const people = ["Anto", "Carine", "Cécilia", "Dada", "Dim", "Guizmo", "Magali", "Pupuce", "Toon", "Will"];
-people.sort();
-
-// Mapping animal/cri
-const animalCris = {
-    "Anto": "Éléphant",
-    "Carine": "Oiseau",
-    "Cécilia": "Singe",
-    "Dada": "Coq",
-    "Dim": "Poule",
-    "Guizmo": "Chèvre",
-    "Magali": "Vache",
-    "Pupuce": "Chat",
-    "Toon": "Crapaud",
-    "Will": "Cheval"
+const people = ["Anto","Carine","Cécilia","Dada","Dim","Guizmo","Magali","Pupuce","Toon","Will"];
+const playerColors = {
+    "Anto": "#FF6B6B","Carine": "#6BCB77","Cécilia": "#4D96FF","Dada": "#FFD93D","Dim": "#FF6EFF",
+    "Guizmo": "#00C2BA","Magali": "#FFA500","Pupuce": "#C70039","Toon": "#8A2BE2","Will": "#FF4500",
+    "Pour tous les joueurs": "#000000"
 };
-
-// Liste des gages
-const gages = [
+const animalCris = {
+    "Anto": "Éléphant","Carine": "Oiseau","Cécilia": "Singe","Dada": "Coq","Dim": "Poule",
+    "Guizmo": "Chèvre","Magali": "Vache","Pupuce": "Chat","Toon": "Crapaud","Will": "Cheval"
+};
+let gages = [
     "A chaque fois que quelqu'un écrit un mot avec le son 'ou' dans le t'chat, tu devras faire Tarzan",
     "Tu devras appeler Anto 'papa' et Pupuce 'maman'",
     "A chaque fois que quelqu'un rigole, tu devras dire 'Je me suis mis du Kiri partout'",
@@ -191,8 +62,6 @@ const gages = [
     "A chaque fois que Dim parle, tu devras dire 'OK, ça marche' et faire le signe OK",
     "Tu devras faire un doigt d'honneur dès qu'on te parle mais en utilisant un mauvais doigt"
 ];
-
-// Restrictions gages
 const gagesInterdits = {
     "Tu devras appeler Anto 'papa' et Pupuce 'maman'": ["Anto","Pupuce"],
     "Tu devras répéter le dernier mot de chaque phrase de Toon": ["Toon"],
@@ -202,126 +71,105 @@ const gagesInterdits = {
     "A chaque fois que Carine parle, tu devras dire 'Tu peux répéter ?'": ["Carine"],
     "A chaque fois que Dim parle, tu devras dire 'OK, ça marche' et faire le signe OK": ["Dim"]
 };
+const cardGlobal = "Tu devras dire 'ET BAAAAM' dès que quelqu'un descend et faire comme à Roland Garros dès que quelqu'un monte 'PAPAPA PAPAPA PALALAPA OLEEEé.'";
 
-// Troisième carte fixe
-const card3Text = "Tu devras dire 'ET BAAAAM' dès que quelqu'un descend et faire comme à Roland Garros dès que quelqu'un monte 'PAPAPA PAPAPA PALALAPA OLEEEé.'";
+function shuffle(array){for(let i=array.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]];}return array;}
 
-// Couleurs uniques
-const playerColors = {
-    "Anto": "#FF6B6B",
-    "Carine": "#6BCB77",
-    "Cécilia": "#4D96FF",
-    "Dada": "#FFD93D",
-    "Dim": "#FF6EFF",
-    "Guizmo": "#00C2BA",
-    "Magali": "#FFA500",
-    "Pupuce": "#C70039",
-    "Toon": "#8A2BE2",
-    "Will": "#FF4500"
-};
+let deck = [];
+deck.push({text: cardGlobal, player:"Pour tous les joueurs", type:"global"});
+deck = deck.concat(shuffle(people.map(p=>({text:"Cri de l'animal : "+animalCris[p], player:p, type:"cri"}))));
 
-// Affichage des joueurs
-const playersContainer = document.getElementById("playersContainer");
-people.forEach(name => {
-    const div = document.createElement("div");
-    div.classList.add("player");
-    div.dataset.name = name;
-
-    const nameDiv = document.createElement("div");
-    nameDiv.classList.add("player-name");
-    nameDiv.textContent = name;
-
-    div.appendChild(nameDiv);
-    playersContainer.appendChild(div);
+let gagesCards = [];
+people.forEach(p=>{
+    let gage;
+    do { gage = gages[Math.floor(Math.random()*gages.length)]; }
+    while(gagesInterdits[gage]?.includes(p));
+    gages = gages.filter(g=>g!==gage);
+    gagesCards.push({text:"Gage : "+gage, player:p, type:"gage"});
 });
+deck = deck.concat(shuffle(gagesCards));
 
-// Création d'une carte
-function createCard(text, color) {
+const cardsContainer = document.getElementById("cardsContainer");
+const recapDiv = document.getElementById("recapTable");
+let currentIndex = 0;
+let recapData = {};
+
+function createCard(cardData){
     const card = document.createElement("div");
     card.classList.add("card");
-    card.style.background = color;
-    card.style.border = "2px solid #fff";
+    card.style.background = playerColors[cardData.player];
+    const inner = document.createElement("div"); inner.classList.add("card-inner");
 
-    const inner = document.createElement("div");
-    inner.classList.add("card-inner");
+    const front = document.createElement("div"); front.classList.add("card-front");
+    front.textContent = cardData.type==="global"?"Pour tous les joueurs":cardData.player;
 
-    const front = document.createElement("div");
-    front.classList.add("card-front");
-    const frontText = document.createElement("div");
-    frontText.classList.add("text-container");
-    frontText.textContent = "Carte";
-    front.appendChild(frontText);
+    // Ajouter "(cliquez pour afficher)" pour les cartes gages
+    if(cardData.type==="gage" && cardData.player!=="Pour tous les joueurs"){
+        const clickText = document.createElement("div");
+        clickText.classList.add("click-text");
+        clickText.textContent = "(cliquez pour afficher)";
+        front.appendChild(clickText);
+    }
 
-    const back = document.createElement("div");
-    back.classList.add("card-back");
-    const backText = document.createElement("div");
-    backText.classList.add("text-container");
-    backText.textContent = text;
-    back.appendChild(backText);
-
-    inner.appendChild(front);
-    inner.appendChild(back);
+    const back = document.createElement("div"); back.classList.add("card-back");
+    const nameDiv = document.createElement("div"); nameDiv.classList.add("player-name");
+    nameDiv.textContent = cardData.type==="global"?"Pour tous les joueurs":cardData.player;
+    const textDiv = document.createElement("div"); textDiv.classList.add("text-container"); 
+    textDiv.textContent = cardData.text;
+    textDiv.style.color="black";
+    if(cardData.type==="global"){ front.style.color="white"; textDiv.style.color="white"; nameDiv.style.color="white";}
+    back.appendChild(nameDiv); back.appendChild(textDiv);
+    inner.appendChild(front); inner.appendChild(back);
     card.appendChild(inner);
+
+    if(cardData.type==="gage"){
+        front.style.color="black";
+        front.addEventListener("click", ()=>{
+            card.classList.add("animate-suspense");
+            setTimeout(()=>{
+                card.classList.remove("animate-suspense");
+                card.classList.add("flipped");
+                recapData[cardData.player+"_gage"]=cardData.text.replace("Gage : ","");
+                if(currentIndex>=deck.length) showRecap();
+            },3000);
+        });
+    } else {
+        setTimeout(()=>{
+            card.classList.add("show");
+            card.classList.add("flipped");
+            recapData[cardData.player+"_cri"]=cardData.text.replace("Cri de l'animal : ","");
+        },500);
+    }
     return card;
 }
 
-// Gage valide
-function getValidGage(playerName, gagesList) {
-    let attempts = 0;
-    let gage;
-    do {
-        gage = gagesList[Math.floor(Math.random() * gagesList.length)];
-        attempts++;
-        if (attempts > 50) break;
-    } while (gagesInterdits[gage]?.includes(playerName));
-    return gage;
-}
-
-// Tirage joueur par joueur avec scroll automatique
-async function drawCards() {
-    for (let i = 0; i < people.length; i++) {
-        const name = people[i];
-        const playerDiv = [...playersContainer.children].find(p => p.dataset.name === name);
-
-        // Surbrillance
-        document.querySelectorAll('.player').forEach(p => p.classList.remove('active'));
-        playerDiv.classList.add('active');
-
-        // Scroll automatique
-        playerDiv.scrollIntoView({ behavior: "smooth", block: "center" });
-
-        playerDiv.querySelectorAll(".cards-container").forEach(c => c.remove());
-        const container = document.createElement("div");
-        container.classList.add("cards-container");
-        const color = playerColors[name];
-
-        const card1 = createCard("Cri de l'animal : " + animalCris[name], color);
-        const card2Gage = getValidGage(name, gages);
-        const card2 = createCard("Gage : " + card2Gage, color);
-        const card3 = createCard(card3Text, color);
-
-        const cards = [card1, card2, card3];
-        cards.forEach(card => container.appendChild(card));
-        playerDiv.appendChild(container);
-
-        for (let j = 0; j < cards.length; j++) {
-            await new Promise(resolve => setTimeout(resolve, 4000));
-            const card = cards[j];
-            card.classList.add("show");
-            card.classList.add("shake");
-            setTimeout(() => {
-                card.classList.remove("shake");
-                card.classList.add("flipped");
-            }, 500);
-        }
-
-        playerDiv.classList.remove('active');
+function nextCard(){
+    if(currentIndex>=deck.length){ 
+        document.getElementById("nextCard").style.display="none"; 
+        showRecap();
+        return; 
     }
-
-    document.getElementById("drawCards").style.display = "none";
+    const cardData = deck[currentIndex];
+    const card = createCard(cardData);
+    cardsContainer.prepend(card); // dernière carte en haut
+    card.classList.add("show");
+    currentIndex++;
 }
 
-document.getElementById("drawCards").addEventListener("click", drawCards);
+document.getElementById("nextCard").addEventListener("click", nextCard);
+
+function showRecap(){
+    let html="<table><tr><th>Joueur</th><th>Cri</th><th>Gage</th></tr>";
+    people.forEach(p=>{
+        html+=`<tr>
+            <td style="background-color:${playerColors[p]}; font-weight:bold;">${p}</td>
+            <td>${recapData[p+"_cri"]||""}</td>
+            <td>${recapData[p+"_gage"]||""}</td>
+        </tr>`;
+    });
+    html+="</table>";
+    recapDiv.innerHTML = html;
+}
 </script>
 
 </body>
