@@ -10,21 +10,25 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
+    margin: 0;
     background: linear-gradient(to right, #f0f0f0, #d0e7ff);
 }
 
 h1 {
     color: #333;
     text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
 }
 
 .container {
     display: flex;
-    flex-direction: column; /* Joueurs en colonne */
-    gap: 20px;              /* Espace entre chaque joueur */
-    align-items: center;     /* Centre horizontalement les joueurs */
-    margin-top: 20px;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    width: 95%;
+    max-width: 450px;
 }
 
 .player {
@@ -32,32 +36,35 @@ h1 {
     flex-direction: column;
     align-items: center;
     border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    padding: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     width: 100%;
     transition: box-shadow 0.5s ease;
 }
 
-/* Joueur actif en surbrillance */
 .player.active {
     box-shadow: 0 0 20px 5px gold;
 }
 
 .player-name {
     font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 16px;
+    margin-bottom: 8px;
+    font-size: 1rem;
 }
 
 .cards-container {
-    display: flex;           /* Cartes en ligne */
-    gap: 15px;
-    justify-content: center; /* Centre les cartes du joueur */
+    display: flex;
+    flex-wrap: wrap; /* Pour mobile : cartes passent à la ligne si besoin */
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
 }
 
 .card {
-    width: 220px;
-    height: 340px;
+    width: 45vw;      /* largeur relative à l'écran */
+    max-width: 220px;
+    height: 65vw;     /* hauteur relative à la largeur */
+    max-height: 340px;
     perspective: 1200px;
     transform: translateY(50px);
     opacity: 0;
@@ -95,19 +102,17 @@ h1 {
     justify-content: center;
     font-weight: bold;
     font-size: 14px;
-    padding: 0;            
-    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    padding: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     text-align: justify;
     overflow: hidden;
 }
 
 .text-container {
-    max-width: 200px;
+    max-width: 90%;
     word-wrap: break-word;
     color: black;
-}
-
-.card-front {
+    font-size: 0.9rem;
 }
 
 .card-back {
@@ -128,14 +133,16 @@ h1 {
 }
 
 button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin-top: 15px;
+    padding: 12px 25px;
+    font-size: 1.1rem;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     background-color: #4CAF50;
     color: white;
+    width: 90%;
+    max-width: 300px;
 }
 </style>
 </head>
@@ -185,7 +192,7 @@ const gages = [
     "Tu devras faire un doigt d'honneur dès qu'on te parle mais en utilisant un mauvais doigt"
 ];
 
-// Restrictions : quels gages ne peuvent pas être attribués à quels joueurs
+// Restrictions gages
 const gagesInterdits = {
     "Tu devras appeler Anto 'papa' et Pupuce 'maman'": ["Anto","Pupuce"],
     "Tu devras répéter le dernier mot de chaque phrase de Toon": ["Toon"],
@@ -199,7 +206,7 @@ const gagesInterdits = {
 // Troisième carte fixe
 const card3Text = "Tu devras dire 'ET BAAAAM' dès que quelqu'un descend et faire comme à Roland Garros dès que quelqu'un monte 'PAPAPA PAPAPA PALALAPA OLEEEé.'";
 
-// Couleurs uniques pour chaque joueur
+// Couleurs uniques
 const playerColors = {
     "Anto": "#FF6B6B",
     "Carine": "#6BCB77",
@@ -213,7 +220,7 @@ const playerColors = {
     "Will": "#FF4500"
 };
 
-// Afficher les joueurs
+// Affichage des joueurs
 const playersContainer = document.getElementById("playersContainer");
 people.forEach(name => {
     const div = document.createElement("div");
@@ -228,15 +235,16 @@ people.forEach(name => {
     playersContainer.appendChild(div);
 });
 
-// Fonction pour créer une carte
+// Création d'une carte
 function createCard(text, color) {
     const card = document.createElement("div");
     card.classList.add("card");
     card.style.background = color;
     card.style.border = "2px solid #fff";
+
     const inner = document.createElement("div");
     inner.classList.add("card-inner");
-    
+
     const front = document.createElement("div");
     front.classList.add("card-front");
     const frontText = document.createElement("div");
@@ -257,7 +265,7 @@ function createCard(text, color) {
     return card;
 }
 
-// Fonction pour obtenir un gage valide pour un joueur
+// Gage valide
 function getValidGage(playerName, gagesList) {
     let attempts = 0;
     let gage;
@@ -269,13 +277,13 @@ function getValidGage(playerName, gagesList) {
     return gage;
 }
 
-// Tirer les cartes joueur par joueur avec surbrillance
+// Tirage joueur par joueur
 async function drawCards() {
     for (let i = 0; i < people.length; i++) {
         const name = people[i];
         const playerDiv = [...playersContainer.children].find(p => p.dataset.name === name);
 
-        // Surbrillance du joueur actif
+        // Surbrillance
         document.querySelectorAll('.player').forEach(p => p.classList.remove('active'));
         playerDiv.classList.add('active');
 
@@ -304,7 +312,6 @@ async function drawCards() {
             }, 500);
         }
 
-        // Retirer la surbrillance après tirage du joueur
         playerDiv.classList.remove('active');
     }
 
