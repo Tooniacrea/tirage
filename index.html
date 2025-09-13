@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jeu des cartes interactif</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+  }
+
+  h1 {
+    margin-top: 20px;
+    color: #333;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+  }
+
+  select, button {
+    margin: 20px 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  select:hover, button:hover {
+    transform: scale(1.05);
+  }
+
+  .cards-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    min-height: 240px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .card {
+    width: 160px;
+    height: 220px;
+    perspective: 1200px;
+    cursor: pointer;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+
+  .card.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s cubic-bezier(0.68,-0.55,0.265,1.55);
+    transform-style: preserve-3d;
+  }
+
+  .card.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 10px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  }
+
+  .card-front {
+    background: linear-gradient(135deg, #ffd89b, #19547b);
+    color: #fff;
+  }
+
+  .card-back {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    color: #fff;
+    transform: rotateY(180deg);
+  }
+
+  @keyframes shake {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(5deg); }
+    40% { transform: rotate(-5deg); }
+    60% { transform: rotate(3deg); }
+    80% { transform: rotate(-3deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .shake {
+    animation: shake 0.5s;
+  }
+</style>
+</head>
+<body>
+
+<h1>Jeu des cartes interactif 🎴</h1>
+
+<label for="userSelect">Choisis ton nom :</label>
+<select id="userSelect">
+  <option value="">-- Sélectionner --</option>
+  <option value="Alice">Alice</option>
+  <option value="Bob">Bob</option>
+  <option value="Charlie">Charlie</option>
+</select>
+
+<button id="drawCards">Tirer les cartes</button>
+
+<div class="cards-container">
+  <div class="card" id="card1"><div class="card-inner"><div class="card-front">Carte 1</div><div class="card-back" id="card1-back"></div></div></div>
+  <div class="card" id="card2"><div class="card-inner"><div class="card-front">Carte 2</div><div class="card-back" id="card2-back"></div></div></div>
+  <div class="card" id="card3"><div class="card-inner"><div class="card-front">Carte 3</div><div class="card-back" id="card3-back"></div></div></div>
+</div>
+
+<script>
+  const users = {
+    Alice: "Miaou",
+    Bob: "Ouaf",
+    Charlie: "Coin"
+  };
+
+  const gages1 = ["Faire 10 pompes", "Chanter une chanson", "Danser"];
+  const gages2 = ["Raconter une blague", "Imiter un animal", "Faire un compliment"];
+
+  function getRandomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+  }
+
+  document.getElementById("drawCards").addEventListener("click", () => {
+    const selectedUser = document.getElementById("userSelect").value;
+    if (!selectedUser) {
+      alert("Merci de sélectionner ton nom !");
+      return;
+    }
+
+    document.getElementById("card1-back").textContent = users[selectedUser];
+    document.getElementById("card2-back").textContent = getRandomItem(gages1);
+    document.getElementById("card3-back").textContent = getRandomItem(gages2);
+
+    const cards = ["card1", "card2", "card3"];
+    cards.forEach((id, index) => {
+      const cardElem = document.getElementById(id);
+      setTimeout(() => {
+        cardElem.classList.add("show");
+        cardElem.classList.add("shake");
+        setTimeout(() => {
+          cardElem.classList.remove("shake");
+          cardElem.classList.add("flipped");
+        }, 500);
+      }, index * 700);
+    });
+  });
+</script>
+
+</body>
+</html>
