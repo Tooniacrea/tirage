@@ -54,17 +54,17 @@ h1 {
 
 .cards-container {
     display: flex;
-    flex-wrap: wrap; /* Pour mobile : cartes passent à la ligne si besoin */
+    flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     width: 100%;
 }
 
 .card {
-    width: 45vw;      /* largeur relative à l'écran */
+    width: 45vw;
     max-width: 220px;
-    height: 65vw;     /* hauteur relative à la largeur */
-    max-height: 340px;
+    height: 45vw;
+    max-height: 220px;
     perspective: 1200px;
     transform: translateY(50px);
     opacity: 0;
@@ -102,7 +102,7 @@ h1 {
     justify-content: center;
     font-weight: bold;
     font-size: 14px;
-    padding: 5px;
+    padding: 0px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     text-align: justify;
     overflow: hidden;
@@ -277,7 +277,7 @@ function getValidGage(playerName, gagesList) {
     return gage;
 }
 
-// Tirage joueur par joueur
+// Tirage joueur par joueur avec scroll automatique
 async function drawCards() {
     for (let i = 0; i < people.length; i++) {
         const name = people[i];
@@ -286,6 +286,9 @@ async function drawCards() {
         // Surbrillance
         document.querySelectorAll('.player').forEach(p => p.classList.remove('active'));
         playerDiv.classList.add('active');
+
+        // Scroll automatique
+        playerDiv.scrollIntoView({ behavior: "smooth", block: "center" });
 
         playerDiv.querySelectorAll(".cards-container").forEach(c => c.remove());
         const container = document.createElement("div");
