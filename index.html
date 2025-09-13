@@ -3,77 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jeu des cartes interactif</title>
+<title>Tirage des rôles du jeu TikTok</title>
 <style>
-  body {
+body {
     font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    margin: 0;
-    background: linear-gradient(to right, #a1c4fd, #c2e9fb);
-  }
+    padding: 20px;
+    background: linear-gradient(to right, #f0f0f0, #d0e7ff);
+}
 
-  h1 {
-    margin-top: 20px;
+h1 {
     color: #333;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
-  }
+    text-align: center;
+}
 
-  select, button {
-    margin: 20px 10px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.2s;
-  }
-
-  select:hover, button:hover {
-    transform: scale(1.05);
-  }
-
-  .cards-container {
+.container {
     display: flex;
-    gap: 20px;
+    flex-direction: column; /* Joueurs en colonne */
+    gap: 20px;              /* Espace entre chaque joueur */
+    align-items: center;     /* Centre horizontalement les joueurs */
     margin-top: 20px;
-    min-height: 240px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+}
 
-  .card {
-    width: 160px;
-    height: 220px;
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    transition: box-shadow 0.5s ease;
+}
+
+/* Joueur actif en surbrillance */
+.player.active {
+    box-shadow: 0 0 20px 5px gold;
+}
+
+.player-name {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.cards-container {
+    display: flex;           /* Cartes en ligne */
+    gap: 15px;
+    justify-content: center; /* Centre les cartes du joueur */
+}
+
+.card {
+    width: 220px;
+    height: 340px;
     perspective: 1200px;
-    cursor: pointer;
     transform: translateY(50px);
     opacity: 0;
     transition: transform 0.5s ease, opacity 0.5s ease;
-  }
+    border: 2px solid #fff;
+    border-radius: 12px;  
+}
 
-  .card.show {
+.card.show {
     transform: translateY(0);
     opacity: 1;
-  }
+}
 
-  .card-inner {
+.card-inner {
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
     transition: transform 0.8s cubic-bezier(0.68,-0.55,0.265,1.55);
     transform-style: preserve-3d;
-  }
+}
 
-  .card.flipped .card-inner {
+.card.flipped .card-inner {
     transform: rotateY(180deg);
-  }
+}
 
-  .card-front, .card-back {
+.card-front, .card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -83,101 +94,224 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 18px;
-    padding: 10px;
-    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
-  }
+    font-size: 14px;
+    padding: 0;            
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    text-align: justify;
+    overflow: hidden;
+}
 
-  .card-front {
-    background: linear-gradient(135deg, #ffd89b, #19547b);
-    color: #fff;
-  }
+.text-container {
+    max-width: 200px;
+    word-wrap: break-word;
+    color: black;
+}
 
-  .card-back {
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-    color: #fff;
+.card-front {
+}
+
+.card-back {
     transform: rotateY(180deg);
-  }
+}
 
-  @keyframes shake {
+@keyframes shake {
     0% { transform: rotate(0deg); }
     20% { transform: rotate(5deg); }
     40% { transform: rotate(-5deg); }
     60% { transform: rotate(3deg); }
     80% { transform: rotate(-3deg); }
     100% { transform: rotate(0deg); }
-  }
+}
 
-  .shake {
+.shake {
     animation: shake 0.5s;
-  }
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+}
 </style>
 </head>
 <body>
 
-<h1>Jeu des cartes interactif 🎴</h1>
+<h1>Tirage des rôles du jeu TikTok 🎴</h1>
 
-<label for="userSelect">Choisis ton nom :</label>
-<select id="userSelect">
-  <option value="">-- Sélectionner --</option>
-  <option value="Alice">Alice</option>
-  <option value="Bob">Bob</option>
-  <option value="Charlie">Charlie</option>
-</select>
+<div class="container" id="playersContainer"></div>
 
-<button id="drawCards">Tirer les cartes</button>
-
-<div class="cards-container">
-  <div class="card" id="card1"><div class="card-inner"><div class="card-front">Carte 1</div><div class="card-back" id="card1-back"></div></div></div>
-  <div class="card" id="card2"><div class="card-inner"><div class="card-front">Carte 2</div><div class="card-back" id="card2-back"></div></div></div>
-  <div class="card" id="card3"><div class="card-inner"><div class="card-front">Carte 3</div><div class="card-back" id="card3-back"></div></div></div>
-</div>
+<button id="drawCards">Attribuer les cartes</button>
 
 <script>
-  const users = {
-    Anto: "Eléphant",
-    Carine "Oiseau",
-    Cécilia "Singe",
-    Dada "Coq",
-    Dim "Poule",
-    Guizmo "Chèvre",
-    Magali "Vache",
-    Pupuce "Chat",
-    Toon "Crapaud",
-    Will "Cheval"
-  };
+// Liste des personnes
+const people = ["Anto", "Carine", "Cécilia", "Dada", "Dim", "Guizmo", "Magali", "Pupuce", "Toon", "Will"];
+people.sort();
 
-  const gages1 = ["Faire 10 pompes", "Chanter une chanson", "Danser"];
-  const gages2 = ["Raconter une blague", "Imiter un animal", "Faire un compliment"];
+// Mapping animal/cri
+const animalCris = {
+    "Anto": "Éléphant",
+    "Carine": "Oiseau",
+    "Cécilia": "Singe",
+    "Dada": "Coq",
+    "Dim": "Poule",
+    "Guizmo": "Chèvre",
+    "Magali": "Vache",
+    "Pupuce": "Chat",
+    "Toon": "Crapaud",
+    "Will": "Cheval"
+};
 
-  function getRandomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
-  }
+// Liste des gages
+const gages = [
+    "A chaque fois que quelqu'un écrit un mot avec le son 'ou' dans le t'chat, tu devras faire Tarzan",
+    "Tu devras appeler Anto 'papa' et Pupuce 'maman'",
+    "A chaque fois que quelqu'un rigole, tu devras dire 'Je me suis mis du Kiri partout'",
+    "Tu devras répéter le dernier mot de chaque phrase de Toon",
+    "Tu devras crier 'Yeehaw' (comme les cowboys) à chaque fois qu'il y a un cadeau",
+    "Tu devras dire 'Chouquette' à chaque fois que quelqu'un dit ou écrit 'Bonsoir, coucou, salut, bonjour...'",
+    "Tu devras te mettre au garde à vous à chaque fois que Guizmo parle",
+    "Tu devras appeler tout le monde 'Monique'",
+    "Tu devras faire 'Cocorico' toutes les 10 minutes (à 21h00, 21h10, 21h20...)",
+    "Tu devras appeler Wilfried 'Grand Maître' et Dim 'Maitresse'",
+    "A chaque fois que quelqu'un fait une vanne, tu devras dire 'Qu'est-ce qu'on dit au chauffeur ?'",
+    "Tu devras bailler bruyamment à chaque fois que Magali parle",
+    "A chaque fois que Carine parle, tu devras dire 'Tu peux répéter ?'",
+    "A chaque fois que Dim parle, tu devras dire 'OK, ça marche' et faire le signe OK",
+    "Tu devras faire un doigt d'honneur dès qu'on te parle mais en utilisant un mauvais doigt"
+];
 
-  document.getElementById("drawCards").addEventListener("click", () => {
-    const selectedUser = document.getElementById("userSelect").value;
-    if (!selectedUser) {
-      alert("Merci de sélectionner ton nom !");
-      return;
+// Restrictions : quels gages ne peuvent pas être attribués à quels joueurs
+const gagesInterdits = {
+    "Tu devras appeler Anto 'papa' et Pupuce 'maman'": ["Anto","Pupuce"],
+    "Tu devras répéter le dernier mot de chaque phrase de Toon": ["Toon"],
+    "Tu devras te mettre au garde à vous à chaque fois que Guizmo parle": ["Guizmo"],
+    "Tu devras appeler Wilfried 'Grand Maître' et Dim 'Maitresse'": ["Will","Dim"],
+    "Tu devras bailler bruyamment à chaque fois que Magali parle": ["Magali"],
+    "A chaque fois que Carine parle, tu devras dire 'Tu peux répéter ?'": ["Carine"],
+    "A chaque fois que Dim parle, tu devras dire 'OK, ça marche' et faire le signe OK": ["Dim"]
+};
+
+// Troisième carte fixe
+const card3Text = "Tu devras dire 'ET BAAAAM' dès que quelqu'un descend et faire comme à Roland Garros dès que quelqu'un monte 'PAPAPA PAPAPA PALALAPA OLEEEé.'";
+
+// Couleurs uniques pour chaque joueur
+const playerColors = {
+    "Anto": "#FF6B6B",
+    "Carine": "#6BCB77",
+    "Cécilia": "#4D96FF",
+    "Dada": "#FFD93D",
+    "Dim": "#FF6EFF",
+    "Guizmo": "#00C2BA",
+    "Magali": "#FFA500",
+    "Pupuce": "#C70039",
+    "Toon": "#8A2BE2",
+    "Will": "#FF4500"
+};
+
+// Afficher les joueurs
+const playersContainer = document.getElementById("playersContainer");
+people.forEach(name => {
+    const div = document.createElement("div");
+    div.classList.add("player");
+    div.dataset.name = name;
+
+    const nameDiv = document.createElement("div");
+    nameDiv.classList.add("player-name");
+    nameDiv.textContent = name;
+
+    div.appendChild(nameDiv);
+    playersContainer.appendChild(div);
+});
+
+// Fonction pour créer une carte
+function createCard(text, color) {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.style.background = color;
+    card.style.border = "2px solid #fff";
+    const inner = document.createElement("div");
+    inner.classList.add("card-inner");
+    
+    const front = document.createElement("div");
+    front.classList.add("card-front");
+    const frontText = document.createElement("div");
+    frontText.classList.add("text-container");
+    frontText.textContent = "Carte";
+    front.appendChild(frontText);
+
+    const back = document.createElement("div");
+    back.classList.add("card-back");
+    const backText = document.createElement("div");
+    backText.classList.add("text-container");
+    backText.textContent = text;
+    back.appendChild(backText);
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
+    return card;
+}
+
+// Fonction pour obtenir un gage valide pour un joueur
+function getValidGage(playerName, gagesList) {
+    let attempts = 0;
+    let gage;
+    do {
+        gage = gagesList[Math.floor(Math.random() * gagesList.length)];
+        attempts++;
+        if (attempts > 50) break;
+    } while (gagesInterdits[gage]?.includes(playerName));
+    return gage;
+}
+
+// Tirer les cartes joueur par joueur avec surbrillance
+async function drawCards() {
+    for (let i = 0; i < people.length; i++) {
+        const name = people[i];
+        const playerDiv = [...playersContainer.children].find(p => p.dataset.name === name);
+
+        // Surbrillance du joueur actif
+        document.querySelectorAll('.player').forEach(p => p.classList.remove('active'));
+        playerDiv.classList.add('active');
+
+        playerDiv.querySelectorAll(".cards-container").forEach(c => c.remove());
+        const container = document.createElement("div");
+        container.classList.add("cards-container");
+        const color = playerColors[name];
+
+        const card1 = createCard("Cri de l'animal : " + animalCris[name], color);
+        const card2Gage = getValidGage(name, gages);
+        const card2 = createCard("Gage : " + card2Gage, color);
+        const card3 = createCard(card3Text, color);
+
+        const cards = [card1, card2, card3];
+        cards.forEach(card => container.appendChild(card));
+        playerDiv.appendChild(container);
+
+        for (let j = 0; j < cards.length; j++) {
+            await new Promise(resolve => setTimeout(resolve, 4000));
+            const card = cards[j];
+            card.classList.add("show");
+            card.classList.add("shake");
+            setTimeout(() => {
+                card.classList.remove("shake");
+                card.classList.add("flipped");
+            }, 500);
+        }
+
+        // Retirer la surbrillance après tirage du joueur
+        playerDiv.classList.remove('active');
     }
 
-    document.getElementById("card1-back").textContent = users[selectedUser];
-    document.getElementById("card2-back").textContent = getRandomItem(gages1);
-    document.getElementById("card3-back").textContent = getRandomItem(gages2);
+    document.getElementById("drawCards").style.display = "none";
+}
 
-    const cards = ["card1", "card2", "card3"];
-    cards.forEach((id, index) => {
-      const cardElem = document.getElementById(id);
-      setTimeout(() => {
-        cardElem.classList.add("show");
-        cardElem.classList.add("shake");
-        setTimeout(() => {
-          cardElem.classList.remove("shake");
-          cardElem.classList.add("flipped");
-        }, 500);
-      }, index * 700);
-    });
-  });
+document.getElementById("drawCards").addEventListener("click", drawCards);
 </script>
 
 </body>
